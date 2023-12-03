@@ -5,6 +5,7 @@ import './App.css'
 function App() {
 
   const [users, setUsers] = useState([])
+  const [foundUser, setFoundUser] = useState([])
 
   useEffect(()=>{
     fetch('http://localhost:5000/users')
@@ -40,6 +41,15 @@ function App() {
     )
   }
 
+  const handleFind = e => {
+    e.preventDefault();
+    const id = e.target.id.value;
+    console.log(id);
+    fetch(`http://localhost:5000/user/${id}`)
+    .then(res => res.json())
+    .then(data => setFoundUser(data))
+  }
+
   return (
     <>
       <h1>Database Practise</h1>
@@ -59,11 +69,21 @@ function App() {
       <hr />
       <h2>Get Method</h2>
       <div>
-        {users.map(user => <p key={user._id}>{user?.fullName} : {user?.email} : {user?.password}</p>)}
+        {users.map(user => <p key={user._id}>{user?.fullName} : {user?.email} : {user?.password} : {user._id}</p>)}
       </div>
       <br />
       <hr />
       <h2>Get Single Data</h2>
+      <form onSubmit={handleFind}>
+      <input type="text" name="id"/>
+      <br /><br />
+      <button type='submit'>Find</button>
+      </form>
+      <div>
+        <p>{foundUser.fullName}</p>
+      </div>
+      <br />
+      <hr />
     </>
   )
 }
